@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="회원가입"
+            android:textSize="50dp"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/black"/>
+
+
+
+        <EditText
+            android:id="@+id/memberNameEdt"
+            android:layout_marginTop="40dp"
+            android:layout_width="400dp"
+            android:layout_height="wrap_content"
+            android:hint="이름을 입력하세요."
+            android:textSize="26dp"/>
+        <EditText
+            android:id="@+id/memberIdEdt"
+            android:layout_marginTop="40dp"
+            android:layout_width="400dp"
+            android:layout_height="wrap_content"
+            android:hint="아이디를 입력하세요."
+            android:textSize="26dp"/>
+        <EditText
+            android:id="@+id/memberPwdEdt"
+            android:layout_marginTop="40dp"
+            android:layout_width="400dp"
+            android:layout_height="wrap_content"
+            android:hint="비밀번호를 입력하세요."
+            android:textSize="26dp"/>
+        <EditText
+            android:id="@+id/memberPwdCheckEdt"
+            android:layout_marginTop="40dp"
+            android:layout_width="400dp"
+            android:layout_height="wrap_content"
+            android:hint="비밀번호 한번 더 입력하세요. "
+            android:textSize="26dp"/>
+        <EditText
+            android:id="@+id/memberPhoneEdt"
+            android:layout_marginTop="40dp"
+            android:layout_width="400dp"
+            android:layout_height="wrap_content"
+            android:hint="전화번호 입력. (-를 제외한 숫자만)"
+            android:textSize="26dp"/>
+
+        <CheckBox
+            android:id="@+id/memberBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:text="개인정보 수집 동의(필수)"/>
+
+        <Button
+            android:id="@+id/membershipBtn"
+            android:layout_width="match_parent"
+            android:layout_marginBottom="50dp"
+            android:backgroundTint="@color/purple_700"
+            android:textColor="#FFFFFF"
+            android:layout_height="85dp"
+            android:text="회원가입 완료"
+            android:textSize="30dp"/>
+
+    </LinearLayout>
+
+
+</ScrollView>
