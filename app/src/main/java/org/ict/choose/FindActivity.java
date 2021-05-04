@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TabHost;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,6 +36,16 @@ public class FindActivity extends TabActivity {
         findIdBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (findIdNameEdt.getText().toString().length() == 0) {
+                    Toast.makeText(getApplicationContext(), "이름을 입력하세요.", Toast.LENGTH_SHORT).show();
+                    findIdNameEdt.requestFocus();
+                    return;
+                }
+                if (findIdPhoneEdt.getText().toString().length() == 0) {
+                    Toast.makeText(getApplicationContext(), "비밀번호를 입력하세요.", Toast.LENGTH_SHORT).show();
+                    findIdPhoneEdt.requestFocus();
+                    return;
+                }
                 intent = new Intent(getApplicationContext(), FindIdActivity.class);
                 startActivity(intent);
             }
@@ -43,6 +54,22 @@ public class FindActivity extends TabActivity {
         findPwdBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if (findPwdNameEdt.getText().toString().length() == 0) {
+                    Toast.makeText(getApplicationContext(), "이름 입력하세요.", Toast.LENGTH_SHORT).show();
+                    findPwdNameEdt.requestFocus();
+                    return;
+                }
+                if (findPwdIdEdt.getText().toString().length() == 0) {
+                    Toast.makeText(getApplicationContext(), "아이디를 입력하세요.", Toast.LENGTH_SHORT).show();
+                    findPwdIdEdt.requestFocus();
+                    return;
+                }
+                if (findPwdPhoneEdt.getText().toString().length() == 0) {
+                    Toast.makeText(getApplicationContext(), "비밀번호를 입력하세요.", Toast.LENGTH_SHORT).show();
+                    findPwdPhoneEdt.requestFocus();
+                    return;
+                }
                 intent = new Intent(getApplicationContext(), FindPwdActivity.class);
 
                 startActivity(intent);

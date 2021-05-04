@@ -16,6 +16,8 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.lang.reflect.Member;
+
 public class MemberShipActivity extends AppCompatActivity {
 
     EditText memberNameEdt, memberIdEdt, memberPwdEdt, memberPwdCheckEdt, memberPhoneEdt;
@@ -48,17 +50,46 @@ public class MemberShipActivity extends AppCompatActivity {
 //        String pwdEdt = memberPwdEdt.getText().toString();
 //        String numEdt = memberPhoneEdt.getText().toString();
 
-        String name = memberNameEdt.getText().toString();
-        String id = memberIdEdt.getText().toString();
-        String pwd = memberPwdEdt.getText().toString();
-        String num = memberPhoneEdt.getText().toString();
 
         membershipBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(memberNameEdt.getText().toString().length() == 0) {
+                    Toast.makeText(getApplicationContext(), "이름을 입력하세요.", Toast.LENGTH_SHORT).show();
+                    memberNameEdt.requestFocus();
+                    return;
+                }
+                if(memberIdEdt.getText().toString().length() == 0) {
+                    Toast.makeText(getApplicationContext(), "아이디를 입력하세요.", Toast.LENGTH_SHORT).show();
+                    memberIdEdt.requestFocus();
+                    return;
+                }
+                if(memberPwdEdt.getText().toString().length() == 0) {
+                    Toast.makeText(getApplicationContext(), "비밀번호를 입력하세요.", Toast.LENGTH_SHORT).show();
+                    memberPwdEdt.requestFocus();
+                    return;
+                }
+                if(memberPwdCheckEdt.getText().toString().length() == 0) {
+                    Toast.makeText(getApplicationContext(), "비밀번호를 한번 더 입력하세요.", Toast.LENGTH_SHORT).show();
+                    memberPwdCheckEdt.requestFocus();
+                    return;
+                }
+                if(memberPhoneEdt.getText().toString().length() == 0) {
+                    Toast.makeText(getApplicationContext(), "전화번호를 입력하세요.", Toast.LENGTH_SHORT).show();
+                    memberPhoneEdt.requestFocus();
+                    return;
+                }
+                if (!memberPwdEdt.getText().toString().equals(memberPwdCheckEdt.getText().toString())) {
+                    Toast.makeText(getApplicationContext(), "비밀번호를 다시 확인하세요.", Toast.LENGTH_SHORT).show();
+                    memberPwdEdt.requestFocus();
+                    return;
+                }
+
+
 
                 sqlDB = myHelper.getWritableDatabase();
-                sqlDB.execSQL("insert into membertable values ('" + name + "','" + id + "','" + pwd + "','" + num + "');");
+                sqlDB.execSQL("insert into membertable values " +
+                        "('" + memberNameEdt + "','" + memberIdEdt + "','" + memberPwdEdt + "','" + memberPhoneEdt + "');");
 
                 sqlDB.close();
 

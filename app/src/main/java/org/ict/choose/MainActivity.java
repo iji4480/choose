@@ -11,13 +11,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
     EditText loginId, loginPwd;
     Button loginBtn;
     TextView membershipText, findText;
-    myDBHelper myHelper;
     Intent intent;
 
 
@@ -33,12 +33,24 @@ public class MainActivity extends AppCompatActivity {
         membershipText = (TextView)findViewById(R.id.membershipText);
         findText = (TextView)findViewById(R.id.findText);
 
-        myHelper = new myDBHelper(this);
 
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if (loginId.getText().toString().length() == 0) {
+                    Toast.makeText(getApplicationContext(), "아이디를 입력하세요.", Toast.LENGTH_SHORT).show();
+                    loginId.requestFocus();
+                    return;
+                }
+                if (loginPwd.getText().toString().length() == 0) {
+                    Toast.makeText(getApplicationContext(), "비밀번호를 입력하세요.", Toast.LENGTH_SHORT).show();
+                    loginPwd.requestFocus();
+                    return;
+                }
+
                 intent = new Intent(getApplicationContext(), MainPageActivity.class);
+
                 startActivity(intent);
 
 
@@ -65,55 +77,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public class myDBHelper extends SQLiteOpenHelper{
-
-
-        public myDBHelper(Context context){
-
-            super(context, "memberDB", null, 1);
-        }
-
-        @Override
-        public void onCreate(SQLiteDatabase db) {
-
-            db.execSQL("create table membertable(mname char(20), mid char(20) primary key,  mpwd char(20), mnum char(20));");
-        }
-
-        @Override
-        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            db.execSQL("drop table if exists membertable;");
-            onCreate(db);
-
-        }
-    }
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

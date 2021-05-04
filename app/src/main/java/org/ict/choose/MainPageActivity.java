@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainPageActivity extends AppCompatActivity {
 
-    Button writeBtn, loveBtn, helthBtn, tripBtn, shopBtn, fashionBtn;
+    Button writeBtn, loveBtn, helthBtn, tripBtn, shopBtn, fashionBtn, dreamBtn;
     Intent intent;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -22,7 +22,7 @@ public class MainPageActivity extends AppCompatActivity {
         tripBtn = (Button)findViewById(R.id.tripBtn);
         shopBtn = (Button)findViewById(R.id.shopBtn);
         fashionBtn = (Button)findViewById(R.id.fashionBtn);
-
+        dreamBtn = (Button)findViewById(R.id.dreamBtn);
 
         writeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,6 +70,14 @@ public class MainPageActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 intent = new Intent(getApplicationContext(), FashionActivity.class);
+                startActivity(intent);
+            }
+        });
+        dreamBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                intent = new Intent(getApplicationContext(), DreamActivity.class);
+
                 startActivity(intent);
             }
         });

@@ -26,6 +26,8 @@
         <activity android:name=".HelthActivity" android:label="운동"/>
         <activity android:name=".TripActivity" android:label="여행"/>
         <activity android:name=".ShoppingActivity" android:label="쇼핑"/>
+        <activity android:name=".FashionActivity" android:label="패션"/>
+        <activity android:name=".DreamActivity" android:label="진로"/>
     </application>
 
 </manifest>
