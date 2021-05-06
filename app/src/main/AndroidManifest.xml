@@ -28,6 +28,7 @@
         <activity android:name=".ShoppingActivity" android:label="쇼핑"/>
         <activity android:name=".FashionActivity" android:label="패션"/>
         <activity android:name=".DreamActivity" android:label="진로"/>
+        <activity android:name=".MyWriteActivity" android:label="내가 쓴 글"/>
     </application>
 
 </manifest>

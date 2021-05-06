@@ -27,7 +27,6 @@
 
             android:layout_marginTop="40dp"
             android:layout_width="match_parent"
-            android:gravity="center"
             android:orientation="horizontal"
             android:layout_height="match_parent">
 
@@ -53,7 +52,13 @@
         <LinearLayout
             android:layout_marginTop="50dp"
             android:layout_width="match_parent"
+            android:orientation="vertical"
             android:layout_height="match_parent">
+
+            <View
+                android:background="#A19999"
+                android:layout_width="match_parent"
+                android:layout_height="3dp"/>
 
             <EditText
                 android:textColor="@color/black"
@@ -82,22 +87,5 @@
 
 
 </ScrollView>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

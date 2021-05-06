@@ -79,9 +79,9 @@ public class MemberShipActivity extends AppCompatActivity {
                     memberPhoneEdt.requestFocus();
                     return;
                 }
-                if (!memberPwdEdt.getText().toString().equals(memberPwdCheckEdt.getText().toString())) {
-                    Toast.makeText(getApplicationContext(), "비밀번호를 다시 확인하세요.", Toast.LENGTH_SHORT).show();
-                    memberPwdEdt.requestFocus();
+                if (!memberBox.isChecked()){
+                    Toast.makeText(getApplicationContext(), "개인정보 수집을 동의해주세요.", Toast.LENGTH_SHORT).show();
+                    memberBox.requestFocus();
                     return;
                 }
 
