@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -13,20 +14,29 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.lang.reflect.Member;
 
 public class MemberShipActivity extends AppCompatActivity {
+    //태그
+    private static final String TAG = "MemberShipActivity";
+    // 파이어베이스 선언
+    private FirebaseAuth mAuth;
 
     EditText memberNameEdt, memberIdEdt, memberPwdEdt, memberPwdCheckEdt, memberPhoneEdt;
     CheckBox memberBox;
     Button membershipBtn;
 
-    myDBHelper myHelper;
 
-    SQLiteDatabase sqlDB;
 
 
     @Override
@@ -34,6 +44,8 @@ public class MemberShipActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.membership);
         setTitle("회원가입");
+
+        mAuth = FirebaseAuth.getInstance();
 
         memberNameEdt = (EditText)findViewById(R.id.memberNameEdt);
         memberIdEdt = (EditText)findViewById(R.id.memberIdEdt);
@@ -43,7 +55,6 @@ public class MemberShipActivity extends AppCompatActivity {
         memberBox = (CheckBox)findViewById(R.id.memberBox);
         membershipBtn = (Button) findViewById(R.id.membershipBtn);
 
-        myHelper = new myDBHelper(this);
 
 //        String nameEdt = memberNameEdt.getText().toString();
 //        String idEdt = memberIdEdt.getText().toString();
@@ -84,41 +95,38 @@ public class MemberShipActivity extends AppCompatActivity {
                     memberBox.requestFocus();
                     return;
                 }
-
-
-
-                sqlDB = myHelper.getWritableDatabase();
-                sqlDB.execSQL("insert into membertable values " +
-                        "('" + memberNameEdt + "','" + memberIdEdt + "','" + memberPwdEdt + "','" + memberPhoneEdt + "');");
-
-                sqlDB.close();
-
+                join();
             }
-        });
+        });//memberShipBtn
+    }//onCreate
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+    }//on Start
 
-    }
+    private void join(){
+        String phone = ((EditText)findViewById(R.id.memberPhoneEdt)).getText().toString();
+        String pwd = ((EditText)findViewById(R.id.memberPwdEdt)).getText().toString();
+        mAuth.createUserWithEmailAndPassword(phone, pwd)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "createUserWithEmail:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            //UI
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                            //UI
+                        }
+                    }
+                });
 
-    public class myDBHelper extends SQLiteOpenHelper{
-
-
-        public myDBHelper(Context context){
-
-            super(context, "memberDB", null, 1);
-        }
-
-        @Override
-        public void onCreate(SQLiteDatabase db) {
-
-            db.execSQL("create table membertable(mname char(20), mid char(20) primary key,  mpwd char(20), mnum char(20));");
-        }
-
-        @Override
-        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            db.execSQL("drop table if exists membertable;");
-            onCreate(db);
-
-        }
     }
 
 }
