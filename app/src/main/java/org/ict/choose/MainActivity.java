@@ -1,5 +1,6 @@
 package org.ict.choose;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -13,11 +14,21 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 public class MainActivity extends AppCompatActivity {
 
-    EditText loginId, loginPwd;
+    private static final String TAG = "MainActivity";
+    // 파이어베이스 선언
+    private FirebaseAuth mAuth;
+
+    EditText loginEmail, loginPwd;
     Button loginBtn;
-    TextView membershipText, findText;
+    TextView membershipText, changePwdText;
     Intent intent;
 
 
@@ -27,20 +38,21 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         setTitle("로그인");
 
-        loginId = (EditText)findViewById(R.id.loginId);
+        loginEmail = (EditText)findViewById(R.id.loginEmail);
         loginPwd = (EditText)findViewById(R.id.loginPwd);
         loginBtn = (Button)findViewById(R.id.loginBtn);
         membershipText = (TextView)findViewById(R.id.membershipText);
-        findText = (TextView)findViewById(R.id.findText);
+        changePwdText = (TextView)findViewById(R.id.changePwdText);
+        mAuth = FirebaseAuth.getInstance();
 
 
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if (loginId.getText().toString().length() == 0) {
+                if (loginEmail.getText().toString().length() == 0) {
                     Toast.makeText(getApplicationContext(), "아이디를 입력하세요.", Toast.LENGTH_SHORT).show();
-                    loginId.requestFocus();
+                    loginEmail.requestFocus();
                     return;
                 }
                 if (loginPwd.getText().toString().length() == 0) {
@@ -48,11 +60,7 @@ public class MainActivity extends AppCompatActivity {
                     loginPwd.requestFocus();
                     return;
                 }
-
-                intent = new Intent(getApplicationContext(), MainPageActivity.class);
-
-                startActivity(intent);
-
+                    login();
 
             }
         });
@@ -66,17 +74,38 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        findText.setOnClickListener(new View.OnClickListener() {
+        changePwdText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                intent = new Intent(getApplicationContext(), FindActivity.class);
-
+                intent = new Intent(getApplicationContext(), ChangePwdActivity.class);
                 startActivity(intent);
             }
         });
 
+
     }
 
+    private void login() {
+        String email = ((EditText)findViewById(R.id.loginEmail)).getText().toString();
+        String pwd = ((EditText)findViewById(R.id.loginPwd)).getText().toString();
+        mAuth.signInWithEmailAndPassword(email, pwd)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            intent = new Intent(getApplicationContext(), MainPageActivity.class);
+                            startActivity(intent);
+                        } else {
+                            if(task.getException() != null){
+                                Toast.makeText
+                                        (getApplicationContext(), "아이디 또는 비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+
+                        }
+                    }
+                });
+    }
 }
 
 

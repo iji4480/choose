@@ -2,6 +2,7 @@ package org.ict.choose;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -31,8 +32,7 @@ public class MemberShipActivity extends AppCompatActivity {
     private static final String TAG = "MemberShipActivity";
     // 파이어베이스 선언
     private FirebaseAuth mAuth;
-
-    EditText memberNameEdt, memberIdEdt, memberPwdEdt, memberPwdCheckEdt, memberPhoneEdt;
+    EditText memberPwdEdt, memberPwdCheckEdt, memberEmailEdt;
     CheckBox memberBox;
     Button membershipBtn;
 
@@ -47,11 +47,9 @@ public class MemberShipActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        memberNameEdt = (EditText)findViewById(R.id.memberNameEdt);
-        memberIdEdt = (EditText)findViewById(R.id.memberIdEdt);
         memberPwdEdt = (EditText)findViewById(R.id.memberPwdEdt);
         memberPwdCheckEdt = (EditText)findViewById(R.id.memberPwdCheckEdt);
-        memberPhoneEdt = (EditText)findViewById(R.id.memberPhoneEdt);
+        memberEmailEdt = (EditText)findViewById(R.id.memberEmailEdt);
         memberBox = (CheckBox)findViewById(R.id.memberBox);
         membershipBtn = (Button) findViewById(R.id.membershipBtn);
 
@@ -61,41 +59,48 @@ public class MemberShipActivity extends AppCompatActivity {
 //        String pwdEdt = memberPwdEdt.getText().toString();
 //        String numEdt = memberPhoneEdt.getText().toString();
 
-
         membershipBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(memberNameEdt.getText().toString().length() == 0) {
-                    Toast.makeText(getApplicationContext(), "이름을 입력하세요.", Toast.LENGTH_SHORT).show();
-                    memberNameEdt.requestFocus();
+
+                if(memberEmailEdt.getText().toString().length() == 0) {
+                    Toast.makeText(getApplicationContext(), "이메일을 입력하세요.", Toast.LENGTH_SHORT).show();
+                    memberEmailEdt.requestFocus();
                     return;
                 }
-                if(memberIdEdt.getText().toString().length() == 0) {
-                    Toast.makeText(getApplicationContext(), "아이디를 입력하세요.", Toast.LENGTH_SHORT).show();
-                    memberIdEdt.requestFocus();
-                    return;
-                }
+
                 if(memberPwdEdt.getText().toString().length() == 0) {
                     Toast.makeText(getApplicationContext(), "비밀번호를 입력하세요.", Toast.LENGTH_SHORT).show();
                     memberPwdEdt.requestFocus();
                     return;
                 }
+                if(memberPwdEdt.getText().toString().length() < 6) {
+                    Toast.makeText(getApplicationContext(), "비밀번호는 6자 이상이어야 합니다.", Toast.LENGTH_SHORT).show();
+                    memberPwdEdt.requestFocus();
+                    return;
+                }
+
                 if(memberPwdCheckEdt.getText().toString().length() == 0) {
                     Toast.makeText(getApplicationContext(), "비밀번호를 한번 더 입력하세요.", Toast.LENGTH_SHORT).show();
                     memberPwdCheckEdt.requestFocus();
                     return;
                 }
-                if(memberPhoneEdt.getText().toString().length() == 0) {
-                    Toast.makeText(getApplicationContext(), "전화번호를 입력하세요.", Toast.LENGTH_SHORT).show();
-                    memberPhoneEdt.requestFocus();
-                    return;
-                }
+
                 if (!memberBox.isChecked()){
                     Toast.makeText(getApplicationContext(), "개인정보 수집을 동의해주세요.", Toast.LENGTH_SHORT).show();
                     memberBox.requestFocus();
                     return;
                 }
+
+                if(!memberPwdCheckEdt.getText().toString().equals(memberPwdEdt.getText().toString())) {
+                    Toast.makeText(getApplicationContext(), "비밀번호를 확인해 주세요.", Toast.LENGTH_SHORT).show();
+                    memberPwdEdt.requestFocus();
+                    return;
+                }
+
                 join();
+
+
             }
         });//memberShipBtn
     }//onCreate
@@ -108,21 +113,20 @@ public class MemberShipActivity extends AppCompatActivity {
     }//on Start
 
     private void join(){
-        String phone = ((EditText)findViewById(R.id.memberPhoneEdt)).getText().toString();
+        String email = ((EditText)findViewById(R.id.memberEmailEdt)).getText().toString();
         String pwd = ((EditText)findViewById(R.id.memberPwdEdt)).getText().toString();
-        mAuth.createUserWithEmailAndPassword(phone, pwd)
+        mAuth.createUserWithEmailAndPassword(email, pwd)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "createUserWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
+
+                            Toast.makeText(getApplicationContext(), "회원가입이 완료되었습니다.", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            startActivity(intent);
                             //UI
                         } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            //UI
+                            Toast.makeText(getApplicationContext(), "이미 존재하는 이메일입니다.", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
