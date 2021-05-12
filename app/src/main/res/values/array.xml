@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="thema">
-        <item>선택해 주세요.</item>
+        <item>--선택해 주세요--</item>
         <item>연애</item>
         <item>운동</item>
         <item>여행</item>

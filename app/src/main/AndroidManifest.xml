@@ -30,6 +30,7 @@
         <activity android:name=".DreamActivity" android:label="진로"/>
         <activity android:name=".MyWriteActivity" android:label="내가 쓴 글"/>
         <activity android:name=".ChangePwdActivity" android:label="비밀번호 재설정"/>
+        <activity android:name=".MemberInfoActivity" android:label="회원가입"/>
     </application>
 
 </manifest>
