@@ -56,7 +56,7 @@ public class MemberInfoActivity extends AppCompatActivity {
 
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             FirebaseFirestore db = FirebaseFirestore.getInstance();
-            MemberDto memberDto = new MemberDto(nickName);
+            MemberDto memberDto = new MemberDto(nickName,user.getUid());
             if (user != null){
                 db.collection("user").document("회원 닉네임").set(memberDto)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
