@@ -95,6 +95,8 @@ public class MainActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             intent = new Intent(getApplicationContext(), MainPageActivity.class);
                             startActivity(intent);
+                            loginEmail.setText("");
+                            loginPwd.setText("");
                         } else {
                             if(task.getException() != null){
                                 Toast.makeText

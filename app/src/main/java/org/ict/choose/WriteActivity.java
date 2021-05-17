@@ -22,6 +22,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.lang.reflect.Array;
+import java.lang.reflect.Member;
 import java.util.ArrayList;
 
 public class WriteActivity extends AppCompatActivity {
@@ -30,8 +31,13 @@ public class WriteActivity extends AppCompatActivity {
     EditText content;
     Button uploadBtn;
     Intent intent;
-
-
+    private static final String love = "love";
+    private static final String helth = "helth";
+    private static final String shop = "shop";
+    private static final String trip = "trip";
+    private static final String fashion = "fashion";
+    private static final String dream = "dream";
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     ArrayList arrayList;
 
@@ -76,61 +82,65 @@ public class WriteActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                write();
+                String content = ((EditText) findViewById(R.id.content)).getText().toString();
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                WriteDto writeDto = new WriteDto(content, user.getUid());
+
 
                 if (select_item[0].equals("연애")){
                     intent = new Intent(WriteActivity.this, LoveActivity.class);
-                    intent.putExtra("content", "");
                     startActivity(intent);
+                    db.collection(user.getUid()).document(love).set(writeDto);
+
 
                 }if (select_item[0].equals("운동")){
                     intent = new Intent(WriteActivity.this, HelthActivity.class);
                     startActivity(intent);
+                    db.collection(user.getUid()).document(helth).set(writeDto);
 
                 }if (select_item[0].equals("쇼핑")){
                     intent = new Intent(WriteActivity.this, ShoppingActivity.class);
                     startActivity(intent);
+                    db.collection(user.getUid()).document(shop).set(writeDto);
                 }if (select_item[0].equals("여행")){
                     intent = new Intent(WriteActivity.this, TripActivity.class);
                     startActivity(intent);
+                    db.collection(user.getUid()).document(trip).set(writeDto);
                 }if (select_item[0].equals("패션")){
                     intent = new Intent(WriteActivity.this, FashionActivity.class);
                     startActivity(intent);
+                    db.collection(user.getUid()).document(fashion).set(writeDto);
                 }if (select_item[0].equals("진로")){
                     intent = new Intent(WriteActivity.this, DreamActivity.class);
                     startActivity(intent);
+                    db.collection(user.getUid()).document(dream).set(writeDto);
                 }
 
-            }
+                finish();
 
 
+            }//onClick
         });//uploadBtn
-
     }//onCreate
-    private void write() {
-        String content = ((EditText) findViewById(R.id.content)).getText().toString();
 
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        WriteDto writeDto = new WriteDto(content, user.getUid());
-        db.collection("write").document("작성글").set(writeDto)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Toast.makeText(getApplicationContext(), "게시글이 등록되었습니다.", Toast.LENGTH_SHORT).show();
+    private long backKeyPressedTime = 0;
+    @Override public void onBackPressed() { //super.onBackPressed();
 
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getApplicationContext(), "사용 불가능한 닉네임 입니다.", Toast.LENGTH_SHORT).show();
-                    }
-                });
+        if (System.currentTimeMillis() > backKeyPressedTime + 2000) {
+            backKeyPressedTime = System.currentTimeMillis();
+            Toast.makeText(this, "\'뒤로\' 버튼을 한번 더 누르시면 종료됩니다.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (System.currentTimeMillis() <= backKeyPressedTime + 2000) {
+            finish();
+
+        }
+
+    }//onBackPressed
 
 
-    }//write
 
 
     }

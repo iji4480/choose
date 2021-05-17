@@ -23,7 +23,7 @@ public class MemberInfoActivity extends AppCompatActivity {
 
     EditText nickNameEdt;
     Button finishBtn;
-
+    private static final String collectionUser = "user";
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +58,7 @@ public class MemberInfoActivity extends AppCompatActivity {
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             MemberDto memberDto = new MemberDto(nickName,user.getUid());
             if (user != null){
-                db.collection("user").document("회원 닉네임").set(memberDto)
+                db.collection(collectionUser).document("회원 닉네임").set(memberDto)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {

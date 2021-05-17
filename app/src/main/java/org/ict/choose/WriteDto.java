@@ -2,20 +2,20 @@ package org.ict.choose;
 
 public class WriteDto {
 
-    private String content;
+    private String contents;
     private String writer;
 
-    public WriteDto(String content, String writer){
-        this.content = content;
+    public WriteDto(String contents, String writer){
+        this.contents = contents;
         this.writer = writer;
     }
 
-    public String getContent(){
-        return this.content;
+    public String getContents(){
+        return this.contents;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setContents(String contents) {
+        this.contents = contents;
 
     }
     public String getWriter(){
