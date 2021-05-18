@@ -92,7 +92,6 @@ public class WriteActivity extends AppCompatActivity {
                     startActivity(intent);
                     db.collection(user.getUid()).document(love).set(writeDto);
 
-
                 }if (select_item[0].equals("운동")){
                     intent = new Intent(WriteActivity.this, HelthActivity.class);
                     startActivity(intent);

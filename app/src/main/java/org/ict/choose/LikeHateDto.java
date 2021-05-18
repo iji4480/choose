@@ -1,30 +1,30 @@
 package org.ict.choose;
 
 public class LikeHateDto {
-    String like;
-    String hate;
+    int like;
+    String id;
 
-    public LikeHateDto(String like, String hate){
+
+    public LikeHateDto(int like, String id){
         this.like = like;
-        this.hate = hate;
+        this.id = id;
     }
 
-    public String getLike(){
+    public int getLike(){
         return this.like;
     }
 
-    public void setContent(String like) {
+    public void setLike(int like) {
         this.like = like;
-
     }
-    public String getHate(){
-        return this.hate;
+    public String getId() {
+        return this.id;
     }
 
-    public void setWriter(String hate) {
-        this.hate = hate;
-
+    public void setId(String id) {
+        this.id = id;
     }
+
 
 
 }
