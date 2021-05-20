@@ -1,6 +1,8 @@
 package org.ict.choose;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,9 +19,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class DreamActivity extends AppCompatActivity {
 
-    TextView dreamContent;
-
-
+    TextView dreamContent, dreamLikeText, dreamHateText;
+    ImageView dreamLikeCount, dreamHateCount;
+    private int likeCnt;
+    private int hateCnt;
     private String userUid;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -29,8 +32,60 @@ public class DreamActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dream);
 
-
+        dreamLikeCount = (ImageView)findViewById(R.id.dreamLikeCount);
+        dreamHateCount = (ImageView)findViewById(R.id.dreamHateCount);
         dreamContent = (TextView)findViewById(R.id.dreamContent);
+        dreamLikeText = (TextView)findViewById(R.id.dreamLikeText);
+        dreamHateText = (TextView)findViewById(R.id.dreamHateText);
+
+
+        dreamLikeCount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LikeHateDto like = new LikeHateDto(++likeCnt, userUid);
+                db.collection(user.getUid()).document("dream").collection("Count").document("like").set(like);
+                DocumentReference doRef = db.collection(userUid).document("dream").collection("Count").document("like");
+                doRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+
+                            dreamLikeText.setText(document.getDouble("like").toString());
+                        } else {
+                            return;
+                        }
+
+
+                    }
+                });//contents 투표 수를 화면에 표출
+            }
+        });
+
+        dreamHateCount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LikeHateDto like = new LikeHateDto(++hateCnt, userUid);
+                db.collection(user.getUid()).document("dream").collection("Count").document("hate").set(like);
+                DocumentReference doRef = db.collection(userUid).document("dream").collection("Count").document("hate");
+                doRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+
+                            dreamHateText.setText(document.getDouble("hate").toString());
+                        } else {
+                            return;
+                        }
+
+
+                    }
+                });//contents 투표 수를 화면에 표출
+            }
+        });
+
+
 
 
         userUid = user.getUid();

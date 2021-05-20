@@ -75,10 +75,12 @@
                     android:layout_weight="1">
 
                     <ImageView
+                        android:id="@+id/dreamLikeCount"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:src="@drawable/yes" />
                     <TextView
+                        android:id="@+id/dreamLikeText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0"
@@ -92,11 +94,13 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1">
                     <ImageView
+                        android:id="@+id/dreamHateCount"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:src="@drawable/no"/>
 
                     <TextView
+                        android:id="@+id/dreamHateText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0"

@@ -24,6 +24,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 
@@ -33,9 +34,8 @@ public class LoveActivity<DatabaseReference> extends AppCompatActivity {
     ImageView likeImg, hateImg;
     LinearLayout contentLayout;
     private String userUid;
-
-    private int count = 0;
-
+    private int likeCnt;
+    private int hateCnt;
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -51,14 +51,27 @@ public class LoveActivity<DatabaseReference> extends AppCompatActivity {
         likeImg = (ImageView)findViewById(R.id.likeImg);
         hateImg = (ImageView)findViewById(R.id.hateImg);
         contentLayout = (LinearLayout)findViewById(R.id.contentLayout);
-
         likeImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // 중복 투표 안되게 막는 로직 모름.
-                LikeHateDto like = new LikeHateDto(++count, userUid);
+                LikeHateDto like = new LikeHateDto(++likeCnt, userUid);
                 db.collection(user.getUid()).document("love").collection("Count").document("like").set(like);
+                DocumentReference doRef = db.collection(userUid).document("love").collection("Count").document("like");
+                doRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
 
+                            likeCount.setText(document.getDouble("like").toString());
+                        } else {
+                            return;
+                        }
+
+
+                    }
+                });//contents 투표 수를 화면에 표출
             }
         });
 
@@ -66,32 +79,30 @@ public class LoveActivity<DatabaseReference> extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                HateDTO hate = new HateDTO(++count, userUid);
-                if (userUid == null) {
-                    db.collection(user.getUid()).document("love").collection("Count").document("hate").set(hate);
-                }else {
+                HateDTO hate = new HateDTO(++hateCnt, userUid);
 
-                }
+                    db.collection(user.getUid()).document("love").collection("Count").document("hate").set(hate);
+                    DocumentReference doRef = db.collection(userUid).document("love").collection("Count").document("hate");
+                    doRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                DocumentSnapshot document = task.getResult();
+                                hateCount.setText(document.getDouble("hate").toString());
+                            } else {
+                                return;
+                            }
+                        }
+                    });//contents 투표 수를 화면에 표출
+
+
+
 
             }
         });
 
-        DocumentReference doRef = db.collection(userUid).document("love").collection("Count").document("like");
-        doRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-//                    int like = Integer.parseInt(document.getString("like")); 정수로 받아오는 법 모름
-//                    likeCount.setText("" + like);
-
-                } else {
-                    return;
-                }
 
 
-            }
-        });//contents
 
 
 
@@ -115,7 +126,5 @@ public class LoveActivity<DatabaseReference> extends AppCompatActivity {
         });//contents
 
     }//onCreate
-
-
 
 }
