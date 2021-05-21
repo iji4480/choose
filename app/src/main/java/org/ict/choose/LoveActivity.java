@@ -34,8 +34,6 @@ public class LoveActivity<DatabaseReference> extends AppCompatActivity {
     ImageView likeImg, hateImg;
     LinearLayout contentLayout;
     private String userUid;
-    private int likeCnt;
-    private int hateCnt;
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -51,25 +49,24 @@ public class LoveActivity<DatabaseReference> extends AppCompatActivity {
         likeImg = (ImageView)findViewById(R.id.likeImg);
         hateImg = (ImageView)findViewById(R.id.hateImg);
         contentLayout = (LinearLayout)findViewById(R.id.contentLayout);
+
+
         likeImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // 중복 투표 안되게 막는 로직 모름.
-                LikeHateDto like = new LikeHateDto(++likeCnt, userUid);
-                db.collection(user.getUid()).document("love").collection("Count").document("like").set(like);
-                DocumentReference doRef = db.collection(userUid).document("love").collection("Count").document("like");
+                LikeHateDto like = new LikeHateDto(+1 , userUid);
+                db.collection("Love").document(userUid).collection("Count").document("like").set(like);
+                DocumentReference doRef = db.collection("Love").document(userUid).collection("Count").document("like");
                 doRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
                             DocumentSnapshot document = task.getResult();
-
                             likeCount.setText(document.getDouble("like").toString());
                         } else {
                             return;
                         }
-
-
                     }
                 });//contents 투표 수를 화면에 표출
             }
@@ -79,10 +76,10 @@ public class LoveActivity<DatabaseReference> extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                HateDTO hate = new HateDTO(++hateCnt, userUid);
+                HateDTO hate = new HateDTO(+1, userUid);
 
-                    db.collection(user.getUid()).document("love").collection("Count").document("hate").set(hate);
-                    DocumentReference doRef = db.collection(userUid).document("love").collection("Count").document("hate");
+                    db.collection("Love").document(userUid).collection("Count").document("hate").set(hate);
+                    DocumentReference doRef = db.collection("Love").document(userUid).collection("Count").document("hate");
                     doRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -94,23 +91,10 @@ public class LoveActivity<DatabaseReference> extends AppCompatActivity {
                             }
                         }
                     });//contents 투표 수를 화면에 표출
-
-
-
-
             }
         });
 
-
-
-
-
-
-
-
-        //contents
-
-        DocumentReference docRef = db.collection(userUid).document("love");
+        DocumentReference docRef = db.collection("Love").document(userUid);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -120,11 +104,8 @@ public class LoveActivity<DatabaseReference> extends AppCompatActivity {
                 } else {
                         return;
                 }
-
-
             }
         });//contents
-
     }//onCreate
 
 }

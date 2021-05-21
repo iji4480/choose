@@ -1,6 +1,8 @@
 package org.ict.choose;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,8 +21,8 @@ import org.w3c.dom.Text;
 
 public class FashionActivity extends AppCompatActivity {
 
-    TextView fashionContent;
-
+    TextView fashionContent, fashionLikeText, fashionHateText;
+    ImageView fashionLikeImage, fashionHateImage;
     private String userUid;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -32,21 +34,83 @@ public class FashionActivity extends AppCompatActivity {
         setContentView(R.layout.fashion);
 
         fashionContent = (TextView)findViewById(R.id.fashionContent);
+        fashionLikeImage = (ImageView)findViewById(R.id.fashionLikeImage);
+        fashionHateImage = (ImageView)findViewById(R.id.fashionHateImage);
+        fashionLikeText = (TextView)findViewById(R.id.fashionLikeText);
+        fashionHateText = (TextView)findViewById(R.id.fashionHateText);
+
 
         userUid = user.getUid();
-        DocumentReference docRef = db.collection(userUid).document("fashion");
+        DocumentReference docRef = db.collection("Fashion").document(userUid);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     fashionContent.setText(document.getString("contents"));
-                } else {
-
                 }
-
             }
         });//contents
 
-    }
+        fashionLikeImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LikeHateDto like = new LikeHateDto(+1, userUid);
+                db.collection("Fashion").document(userUid).collection("Count").document("hate").set(like);
+                DocumentReference doRef = db.collection("Fashion").document(userUid).collection("Count").document("like");
+                doRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            fashionLikeText.setText(document.getDouble("like").toString());
+                        } else {
+                            return;
+                        }
+
+
+                    }
+                });//contents 투표 수를 화면에 표출
+            }
+        });//likeImage
+        fashionHateImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                HateDTO hate = new HateDTO(+1, userUid);
+                db.collection("Fashion").document(userUid).collection("Count").document("hate").set(hate);
+                DocumentReference doRef = db.collection("Fashion").document(userUid).collection("Count").document("hate");
+                doRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            fashionHateText.setText(document.getDouble("hate").toString());
+                        } else {
+                            return;
+                        }
+                    }
+                });//contents 투표 수를 화면에 표출
+            }
+        });//hateImage
+    }//onCreate
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

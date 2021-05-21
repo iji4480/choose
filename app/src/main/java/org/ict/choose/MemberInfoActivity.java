@@ -58,7 +58,7 @@ public class MemberInfoActivity extends AppCompatActivity {
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             MemberDto memberDto = new MemberDto(nickName,user.getUid());
             if (user != null){
-                db.collection(collectionUser).document("회원 닉네임").set(memberDto)
+                db.collection(collectionUser).document(user.getUid()).set(memberDto)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {

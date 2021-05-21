@@ -1,6 +1,9 @@
 package org.ict.choose;
 
+import android.media.Image;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,7 +20,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class HelthActivity extends AppCompatActivity {
 
-    TextView helthContent;
+    TextView helthContent, helthLikeText, helthHateText;
+    ImageView helthLikeImage, helthHateImage;
 
 
     private String userUid;
@@ -30,9 +34,13 @@ public class HelthActivity extends AppCompatActivity {
         setContentView(R.layout.helth);
 
         helthContent = (TextView)findViewById(R.id.helthContent);
+        helthLikeImage = (ImageView)findViewById(R.id.helthLikeImage);
+        helthHateImage = (ImageView)findViewById(R.id.helthHateImage);
+        helthLikeText = (TextView)findViewById(R.id.helthLikeText);
+        helthHateText = (TextView)findViewById(R.id.helthHateText);
 
         userUid = user.getUid();
-        DocumentReference docRef = db.collection(userUid).document("helth");
+        DocumentReference docRef = db.collection("Helth").document(userUid);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -45,5 +53,46 @@ public class HelthActivity extends AppCompatActivity {
 
             }
         });//contents
+
+        helthLikeImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LikeHateDto like = new LikeHateDto(+1, userUid);
+                db.collection("Helth").document(userUid).collection("Count").document("like").set(like);
+                DocumentReference doRef = db.collection("Helth").document(userUid).collection("Count").document("like");
+                doRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            helthLikeText.setText(document.getDouble("like").toString());
+                        } else {
+                            return;
+                        }
+                    }
+                });//contents 투표 수를 화면에 표출
+            }
+        });
+
+        helthHateImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                HateDTO hate = new HateDTO(+1, userUid);
+                db.collection("Helth").document(userUid).collection("Count").document("hate").set(hate);
+                DocumentReference doRef = db.collection("Helth").document(userUid).collection("Count").document("hate");
+                doRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            helthHateText.setText(document.getDouble("hate").toString());
+                        } else {
+                            return;
+                        }
+                    }
+                });//contents 투표 수를 화면에 표출
+            }
+        });
+
     }//onCreate
 }

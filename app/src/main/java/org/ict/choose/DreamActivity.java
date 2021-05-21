@@ -21,8 +21,6 @@ public class DreamActivity extends AppCompatActivity {
 
     TextView dreamContent, dreamLikeText, dreamHateText;
     ImageView dreamLikeCount, dreamHateCount;
-    private int likeCnt;
-    private int hateCnt;
     private String userUid;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -38,25 +36,22 @@ public class DreamActivity extends AppCompatActivity {
         dreamLikeText = (TextView)findViewById(R.id.dreamLikeText);
         dreamHateText = (TextView)findViewById(R.id.dreamHateText);
 
-
+        userUid = user.getUid();
         dreamLikeCount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LikeHateDto like = new LikeHateDto(++likeCnt, userUid);
-                db.collection(user.getUid()).document("dream").collection("Count").document("like").set(like);
+                LikeHateDto like = new LikeHateDto(+1, userUid);
+                db.collection("Dream").document(userUid).collection("Count").document("like").set(like);
                 DocumentReference doRef = db.collection(userUid).document("dream").collection("Count").document("like");
                 doRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
                             DocumentSnapshot document = task.getResult();
-
                             dreamLikeText.setText(document.getDouble("like").toString());
                         } else {
                             return;
                         }
-
-
                     }
                 });//contents 투표 수를 화면에 표출
             }
@@ -65,21 +60,18 @@ public class DreamActivity extends AppCompatActivity {
         dreamHateCount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LikeHateDto like = new LikeHateDto(++hateCnt, userUid);
-                db.collection(user.getUid()).document("dream").collection("Count").document("hate").set(like);
-                DocumentReference doRef = db.collection(userUid).document("dream").collection("Count").document("hate");
+                HateDTO hate = new HateDTO(+1, userUid);
+                db.collection("Dream").document(userUid).collection("Count").document("hate").set(hate);
+                DocumentReference doRef = db.collection("Dream").document(userUid).collection("Count").document("hate");
                 doRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
                             DocumentSnapshot document = task.getResult();
-
                             dreamHateText.setText(document.getDouble("hate").toString());
                         } else {
                             return;
                         }
-
-
                     }
                 });//contents 투표 수를 화면에 표출
             }
@@ -89,7 +81,7 @@ public class DreamActivity extends AppCompatActivity {
 
 
         userUid = user.getUid();
-        DocumentReference docRef = db.collection(userUid).document("dream");
+        DocumentReference docRef = db.collection("WRITE").document("dream");
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {

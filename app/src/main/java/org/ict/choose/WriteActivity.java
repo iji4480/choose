@@ -51,7 +51,7 @@ public class WriteActivity extends AppCompatActivity {
         uploadBtn = (Button)findViewById(R.id.uploadBtn);
         title = (Spinner)findViewById(R.id.title);
         arrayList = new ArrayList();
-        arrayList.add("--주제를 선택해주세요.--");
+        arrayList.add("--주제를 선택하세요.--");
         arrayList.add("연애");
         arrayList.add("운동");
         arrayList.add("쇼핑");
@@ -85,38 +85,40 @@ public class WriteActivity extends AppCompatActivity {
                 String content = ((EditText) findViewById(R.id.content)).getText().toString();
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 WriteDto writeDto = new WriteDto(content, user.getUid());
-
+                String uid = user.getUid();
 
                 if (select_item[0].equals("연애")){
                     intent = new Intent(WriteActivity.this, LoveActivity.class);
                     startActivity(intent);
-                    db.collection(user.getUid()).document(love).set(writeDto);
+                    db.collection("Love").document(uid).set(writeDto);
 
                 }if (select_item[0].equals("운동")){
                     intent = new Intent(WriteActivity.this, HelthActivity.class);
                     startActivity(intent);
-                    db.collection(user.getUid()).document(helth).set(writeDto);
+                    db.collection("Helth").document(uid).set(writeDto);
 
                 }if (select_item[0].equals("쇼핑")){
                     intent = new Intent(WriteActivity.this, ShoppingActivity.class);
                     startActivity(intent);
-                    db.collection(user.getUid()).document(shop).set(writeDto);
+                    db.collection("shopping").document(uid).set(writeDto);
                 }if (select_item[0].equals("여행")){
                     intent = new Intent(WriteActivity.this, TripActivity.class);
                     startActivity(intent);
-                    db.collection(user.getUid()).document(trip).set(writeDto);
+                    db.collection("Trip").document(uid).set(writeDto);
                 }if (select_item[0].equals("패션")){
                     intent = new Intent(WriteActivity.this, FashionActivity.class);
                     startActivity(intent);
-                    db.collection(user.getUid()).document(fashion).set(writeDto);
+                    db.collection("Fashion").document(uid).set(writeDto);
                 }if (select_item[0].equals("진로")){
                     intent = new Intent(WriteActivity.this, DreamActivity.class);
                     startActivity(intent);
-                    db.collection(user.getUid()).document(dream).set(writeDto);
+                    db.collection("Dream").document().set(writeDto);
+                }else if (select_item[0].equals("--주제를 선택하세요.--")){
+                    Toast.makeText(getApplicationContext(), "주제를 선택해주세요.", Toast.LENGTH_LONG).show();
+                    return;
                 }
 
                 finish();
-
 
             }//onClick
         });//uploadBtn
