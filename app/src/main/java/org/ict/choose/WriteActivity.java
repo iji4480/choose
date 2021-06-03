@@ -84,35 +84,41 @@ public class WriteActivity extends AppCompatActivity {
 
                 String content = ((EditText) findViewById(R.id.content)).getText().toString();
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                WriteDto writeDto = new WriteDto(content, user.getUid());
+                WriteDto writeDto = new WriteDto(content, user.getUid(), 0, 0);
+                MyActivityDTO myDTO = new MyActivityDTO(content);
                 String uid = user.getUid();
+
 
                 if (select_item[0].equals("연애")){
                     intent = new Intent(WriteActivity.this, LoveActivity.class);
                     startActivity(intent);
-                    db.collection("Love").document(uid).set(writeDto);
-
+                    db.collection("Love").document(uid).collection("write").document().set(writeDto);
+                    db.collection("Love").document(uid).set(myDTO);
                 }if (select_item[0].equals("운동")){
                     intent = new Intent(WriteActivity.this, HelthActivity.class);
                     startActivity(intent);
-                    db.collection("Helth").document(uid).set(writeDto);
-
+                    db.collection("Helth").document(uid).collection("write").document().set(writeDto);
+                    db.collection("Helth").document(uid).set(myDTO);
                 }if (select_item[0].equals("쇼핑")){
                     intent = new Intent(WriteActivity.this, ShoppingActivity.class);
                     startActivity(intent);
-                    db.collection("shopping").document(uid).set(writeDto);
+                    db.collection("Shopping").document(uid).collection("write").document().set(writeDto);
+                    db.collection("Shopping").document(uid).set(myDTO);
                 }if (select_item[0].equals("여행")){
                     intent = new Intent(WriteActivity.this, TripActivity.class);
                     startActivity(intent);
-                    db.collection("Trip").document(uid).set(writeDto);
+                    db.collection("Trip").document(uid).collection("write").document().set(writeDto);
+                    db.collection("Trip").document(uid).set(myDTO);
                 }if (select_item[0].equals("패션")){
                     intent = new Intent(WriteActivity.this, FashionActivity.class);
                     startActivity(intent);
-                    db.collection("Fashion").document(uid).set(writeDto);
+                    db.collection("Fashion").document(uid).collection("write").document().set(writeDto);
+                    db.collection("Fashion").document(uid).set(myDTO);
                 }if (select_item[0].equals("진로")){
                     intent = new Intent(WriteActivity.this, DreamActivity.class);
                     startActivity(intent);
-                    db.collection("Dream").document().set(writeDto);
+                    db.collection("Dream").document(uid).collection("write").document().set(writeDto);
+                    db.collection("Dream").document(uid).set(myDTO);
                 }else if (select_item[0].equals("--주제를 선택하세요.--")){
                     Toast.makeText(getApplicationContext(), "주제를 선택해주세요.", Toast.LENGTH_LONG).show();
                     return;
@@ -122,6 +128,7 @@ public class WriteActivity extends AppCompatActivity {
 
             }//onClick
         });//uploadBtn
+
     }//onCreate
 
 

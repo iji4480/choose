@@ -36,7 +36,6 @@ public class MainPageActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 intent = new Intent(getApplicationContext(), WriteActivity.class);
-
                 startActivity(intent);
 
             }

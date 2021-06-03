@@ -1,6 +1,7 @@
 package org.ict.choose;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -16,6 +17,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class DreamActivity extends AppCompatActivity {
 
@@ -24,7 +27,8 @@ public class DreamActivity extends AppCompatActivity {
     private String userUid;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
+    int i;
+    int j;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,12 +41,27 @@ public class DreamActivity extends AppCompatActivity {
         dreamHateText = (TextView)findViewById(R.id.dreamHateText);
 
         userUid = user.getUid();
+        db.collection("Dream").document(userUid).collection("write")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                dreamContent.setText(document.getString("contents"));
+                            }
+                        } else {
+                        }
+                    }
+                });
+
         dreamLikeCount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LikeHateDto like = new LikeHateDto(+1, userUid);
-                db.collection("Dream").document(userUid).collection("Count").document("like").set(like);
-                DocumentReference doRef = db.collection(userUid).document("dream").collection("Count").document("like");
+                LikeHateDto like = new LikeHateDto(++i, userUid);
+                db.collection("Dream").document(userUid)
+                        .collection("Count").document("like").set(like);
+                DocumentReference doRef = db.collection("Dream").document(userUid).collection("Count").document("like");
                 doRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -55,15 +74,17 @@ public class DreamActivity extends AppCompatActivity {
                     }
                 });//contents 투표 수를 화면에 표출
             }
-        });
+        });//
+
 
         dreamHateCount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                HateDTO hate = new HateDTO(+1, userUid);
-                db.collection("Dream").document(userUid).collection("Count").document("hate").set(hate);
-                DocumentReference doRef = db.collection("Dream").document(userUid).collection("Count").document("hate");
-                doRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                HateDTO hate = new HateDTO(++j, userUid);
+                db.collection("Dream").document(userUid)
+                        .collection("Count").document("hate").set(hate);
+                DocumentReference doRef2 = db.collection("Dream").document(userUid).collection("Count").document("hate");
+                doRef2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
@@ -77,22 +98,5 @@ public class DreamActivity extends AppCompatActivity {
             }
         });
 
-
-
-
-        userUid = user.getUid();
-        DocumentReference docRef = db.collection("WRITE").document("dream");
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    dreamContent.setText(document.getString("contents"));
-                } else {
-
-                }
-
-            }
-        });//contents
     }
 }

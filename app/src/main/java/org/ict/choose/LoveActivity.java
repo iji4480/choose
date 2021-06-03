@@ -1,7 +1,10 @@
 package org.ict.choose;
 
 import android.content.Intent;
+import android.nfc.Tag;
 import android.os.Bundle;
+import android.renderscript.Sampler;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -11,6 +14,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -23,6 +28,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.protobuf.Value;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -30,10 +36,14 @@ import java.util.ArrayList;
 
 public class LoveActivity<DatabaseReference> extends AppCompatActivity {
 
-    TextView loveContent, likeCount, hateCount;
+    private  String TAG = "loveActivity";
+    TextView loveContent, loveLikeCount, loveHateCount;
     ImageView likeImg, hateImg;
-    LinearLayout contentLayout;
     private String userUid;
+
+    int i;
+    int j;
+
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -43,69 +53,64 @@ public class LoveActivity<DatabaseReference> extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.love);
         userUid = user.getUid();
-        likeCount = (TextView)findViewById(R.id.likeCount);
-        hateCount = (TextView)findViewById(R.id.hateCount);
         loveContent = (TextView)findViewById(R.id.loveContent);
-        likeImg = (ImageView)findViewById(R.id.likeImg);
-        hateImg = (ImageView)findViewById(R.id.hateImg);
-        contentLayout = (LinearLayout)findViewById(R.id.contentLayout);
+        loveHateCount = (TextView)findViewById(R.id.loveHateText);
+        loveLikeCount = (TextView)findViewById(R.id.loveLikeText);
+        likeImg = (ImageView)findViewById(R.id.loveLikeImage);
+        hateImg = (ImageView)findViewById(R.id.loveHateImage);
+        userUid = user.getUid();
 
+        db.collection("Love").document(userUid).collection("write")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                loveContent.setText(document.getString("contents"));
+                            }
+                        }else {
+                            Toast.makeText(getApplicationContext(), "글이 존재하지 않습니다.", Toast.LENGTH_LONG).show();
+                            return;
+                        }
+                    }
+                });//contents
 
         likeImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // 중복 투표 안되게 막는 로직 모름.
-                LikeHateDto like = new LikeHateDto(+1 , userUid);
-                db.collection("Love").document(userUid).collection("Count").document("like").set(like);
+                LikeHateDto like = new LikeHateDto(++i, userUid);
+                db.collection("Love").document(userUid)
+                        .collection("Count").document("like").set(like);
                 DocumentReference doRef = db.collection("Love").document(userUid).collection("Count").document("like");
                 doRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
                             DocumentSnapshot document = task.getResult();
-                            likeCount.setText(document.getDouble("like").toString());
-                        } else {
-                            return;
+                            loveLikeCount.setText(document.getDouble("like").toString());
                         }
                     }
                 });//contents 투표 수를 화면에 표출
             }
-        });
+        });//likeImage
 
         hateImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                HateDTO hate = new HateDTO(+1, userUid);
-
-                    db.collection("Love").document(userUid).collection("Count").document("hate").set(hate);
-                    DocumentReference doRef = db.collection("Love").document(userUid).collection("Count").document("hate");
-                    doRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            if (task.isSuccessful()) {
-                                DocumentSnapshot document = task.getResult();
-                                hateCount.setText(document.getDouble("hate").toString());
-                            } else {
-                                return;
-                            }
+                HateDTO hate = new HateDTO(++j, userUid);
+                db.collection("Love").document(userUid).collection("Count").document("hate").set(hate);
+                DocumentReference doRef2 = db.collection("Love").document(userUid).collection("Count").document("hate");
+                doRef2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            loveHateCount.setText(document.getDouble("hate").toString());
                         }
-                    });//contents 투표 수를 화면에 표출
+                    }
+                });//contents 투표 수를 화면에 표출
             }
-        });
-
-        DocumentReference docRef = db.collection("Love").document(userUid);
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    loveContent.setText(document.getString("contents"));
-                } else {
-                        return;
-                }
-            }
-        });//contents
+        });//hateImage
     }//onCreate
-
 }

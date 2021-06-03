@@ -20,6 +20,7 @@ public class LikeHateDto {
     public void setLike(double like) {
         this.like = like;
     }
+
     public String getId() {
         return this.id;
     }

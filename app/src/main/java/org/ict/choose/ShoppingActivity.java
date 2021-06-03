@@ -17,13 +17,16 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class ShoppingActivity extends AppCompatActivity {
 
 
     TextView shopContent, shopLikeText, shopHateText;
     ImageView shopLikeImage, shopHateImage;
-
+    int i;
+    int j;
     private String userUid;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -40,22 +43,25 @@ public class ShoppingActivity extends AppCompatActivity {
         shopHateImage = (ImageView)findViewById(R.id.shopHateImage);
 
         userUid = user.getUid();
-        DocumentReference docRef = db.collection("Shopping").document(userUid);
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    shopContent.setText(document.getString("contents"));
-                } else {
-                }
-            }
-        });//contents
+        db.collection("Shopping").document(userUid).collection("write")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                shopContent.setText(document.getString("contents"));
+
+                            }
+                        } else {
+                        }
+                    }
+                });// contents
 
         shopLikeImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LikeHateDto like = new LikeHateDto(+1, userUid);
+                LikeHateDto like = new LikeHateDto(++i, userUid);
                 db.collection("Shopping").document(userUid).collection("Count").document("like").set(like);
                 DocumentReference doRef = db.collection("Shopping").document(userUid).collection("Count").document("like");
                 doRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -68,31 +74,27 @@ public class ShoppingActivity extends AppCompatActivity {
                             return;
                         }
                     }
-                });//contents 투표 수를 화면에 표출
+                });//contents 득표 수를 화면에 표출
             }
-        });
-
+        });//LikeImage
         shopHateImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                HateDTO hate = new HateDTO(+1, userUid);
+                HateDTO hate = new HateDTO(++j, userUid);
                 db.collection("Shopping").document(userUid).collection("Count").document("hate").set(hate);
-                DocumentReference doRef = db.collection("Shopping").document(userUid).collection("Count").document("hate");
-                doRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                DocumentReference doRef2 = db.collection("Shopping").document(userUid).collection("Count").document("hate");
+                doRef2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
                             DocumentSnapshot document = task.getResult();
-
                             shopHateText.setText(document.getDouble("hate").toString());
                         } else {
                             return;
                         }
                     }
-                });//contents 투표 수를 화면에 표출
+                });//contents 득표 수를 화면에 표출
             }
-        });
-
-    }//onCreate
-
+        });//hateImage
+    }
 }

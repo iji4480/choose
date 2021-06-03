@@ -26,4 +26,5 @@ public class MemberDto {
         this.user = user;
 
     }
+
 }
