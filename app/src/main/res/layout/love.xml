@@ -37,12 +37,77 @@
             android:gravity="center"
             android:orientation="vertical"
             android:layout_height="match_parent">
-           <ListView
-               android:id="@+id/listView"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content">
+            <View
+                android:background="#A19999"
+                android:layout_width="match_parent"
+                android:layout_height="3dp"/>
+            <LinearLayout
+                android:gravity="center"
+                android:background="#D9E8E6"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <TextView
+                    android:id="@+id/loveContent"
+                    android:gravity="center"
+                    android:textAlignment="center"
+                    android:layout_width="350dp"
+                    android:layout_height="wrap_content"
+                    android:text="게시글이 없습니다."
+                    android:textSize="20dp"/>
+            </LinearLayout>
+            <View
+                android:background="#A19999"
+                android:layout_width="match_parent"
+                android:layout_height="3dp"/>
 
-           </ListView>
+            <LinearLayout
+                android:gravity="center"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:id="@+id/loveLikeImage"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/yes" />
+                    <TextView
+                        android:id="@+id/loveLikeText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textSize="20dp"/>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+                    <ImageView
+                        android:id="@+id/loveHateImage"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/no"/>
+
+                    <TextView
+                        android:id="@+id/loveHateText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textSize="20dp"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
 
         </LinearLayout>
 

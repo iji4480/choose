@@ -25,6 +25,8 @@ import org.w3c.dom.Text;
 
 public class FashionActivity extends AppCompatActivity {
 
+
+
     TextView fashionContent, fashionLikeText, fashionHateText;
     ImageView fashionLikeImage, fashionHateImage;
     private String userUid;

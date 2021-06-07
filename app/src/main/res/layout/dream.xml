@@ -53,7 +53,7 @@
 
                     android:layout_width="350dp"
                     android:layout_height="wrap_content"
-                    android:text="읽어오는중..."
+                    android:text="게시글이 없습니다."
                     android:textSize="20dp"/>
             </LinearLayout>
             <View

@@ -45,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
         changePwdText = (TextView)findViewById(R.id.changePwdText);
         mAuth = FirebaseAuth.getInstance();
 
-
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -61,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
                     login();
-
             }
         });
 
@@ -69,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 intent = new Intent(getApplicationContext(), MemberShipActivity.class);
-
                 startActivity(intent);
             }
         });
@@ -81,8 +78,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-
     }
 
     private void login() {
@@ -103,7 +98,6 @@ public class MainActivity extends AppCompatActivity {
                                         (getApplicationContext(), "아이디 또는 비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
                                 return;
                             }
-
                         }
                     }
                 });

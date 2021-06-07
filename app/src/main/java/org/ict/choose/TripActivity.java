@@ -81,7 +81,7 @@ public class TripActivity extends AppCompatActivity {
             public void onClick(View v) {
                 HateDTO hate = new HateDTO(++j, userUid);
                 db.collection("Trip").document(userUid).collection("Count").document("hate").set(hate);
-                DocumentReference doRef2 = db.collection("Shopping").document(userUid).collection("Count").document("hate");
+                DocumentReference doRef2 = db.collection("Trip").document(userUid).collection("Count").document("hate");
                 doRef2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {

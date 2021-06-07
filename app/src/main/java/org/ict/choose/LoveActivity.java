@@ -1,19 +1,23 @@
 package org.ict.choose;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.nfc.Tag;
 import android.os.Bundle;
 import android.renderscript.Sampler;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -36,11 +40,9 @@ import java.util.ArrayList;
 
 public class LoveActivity<DatabaseReference> extends AppCompatActivity {
 
-    private  String TAG = "loveActivity";
     TextView loveContent, loveLikeCount, loveHateCount;
     ImageView likeImg, hateImg;
     private String userUid;
-
     int i;
     int j;
 
@@ -54,12 +56,13 @@ public class LoveActivity<DatabaseReference> extends AppCompatActivity {
         setContentView(R.layout.love);
         userUid = user.getUid();
         loveContent = (TextView)findViewById(R.id.loveContent);
-        loveHateCount = (TextView)findViewById(R.id.loveHateText);
         loveLikeCount = (TextView)findViewById(R.id.loveLikeText);
+        loveHateCount = (TextView)findViewById(R.id.loveHateText);
         likeImg = (ImageView)findViewById(R.id.loveLikeImage);
         hateImg = (ImageView)findViewById(R.id.loveHateImage);
-        userUid = user.getUid();
 
+
+        userUid = user.getUid();
         db.collection("Love").document(userUid).collection("write")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -69,9 +72,7 @@ public class LoveActivity<DatabaseReference> extends AppCompatActivity {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 loveContent.setText(document.getString("contents"));
                             }
-                        }else {
-                            Toast.makeText(getApplicationContext(), "글이 존재하지 않습니다.", Toast.LENGTH_LONG).show();
-                            return;
+                        } else {
                         }
                     }
                 });//contents
@@ -112,5 +113,7 @@ public class LoveActivity<DatabaseReference> extends AppCompatActivity {
                 });//contents 투표 수를 화면에 표출
             }
         });//hateImage
+
     }//onCreate
+
 }
